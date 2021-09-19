@@ -27,7 +27,7 @@ router.route('/signup')
 
 router.use("/profile",verifyAuth)
 router.route('/profile')
-    .get(async(req,res)=>{
+    .post(async(req,res)=>{
         const {username} = req.body
         const user = await User.findOne({username:username})
         if(user){
