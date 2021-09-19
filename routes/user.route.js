@@ -3,7 +3,7 @@ const User = require('../models/user.model')
 const router = express.Router()
 const jwt = require("jsonwebtoken")
 const bcrypt = require('bcryptjs')
-const { checkUser } = require('../middlewares/auth.middleware')
+const { checkUser, verifyAuth } = require('../middlewares/auth.middleware')
 
 router.route('/')
     .get((req,res)=>{
@@ -22,6 +22,19 @@ router.route('/signup')
             res.json({success:true,addUser})
         }catch(err){
             res.json({success:false,message:err.message})
+        }
+    })
+
+router.use("/profile",verifyAuth)
+router.route('/profile')
+    .get(async(req,res)=>{
+        const {username} = req.body
+        const user = await User.findOne({username:username})
+        if(user){
+            user.password = undefined
+            res.json({success:true,user})
+        }else{
+            res.status(404).json({success:false,message:"User not found"})
         }
     })
 
