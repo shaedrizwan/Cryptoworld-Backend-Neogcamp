@@ -52,7 +52,7 @@ router.route('/updateName')
         try{
             const userId = req.userId
             const {newName} = req.body
-            const user = await User.findOneAndUpdate({_id:userId},{username:newName})
+            const user = await User.findOneAndUpdate({_id:userId},{name:newName})
             res.json({success:true,message:"Name successfully updated"})
         }catch(error){
             res.json(500).json({success:false,error:error.message})
