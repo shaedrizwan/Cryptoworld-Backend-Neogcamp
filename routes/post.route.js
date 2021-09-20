@@ -21,10 +21,9 @@ router.route('/add')
             const {post} = req.body
             const userId = req.userId
             const user = await User.findById(userId)
-            const name = `${user.firstName} ${user.lastName}`
             const newPost = {
                 post:post,
-                name:name,
+                name:user.name,
                 username:user.username,
                 profilePicture:user.profilePicture
             }
