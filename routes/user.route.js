@@ -3,6 +3,7 @@ const User = require('../models/user.model')
 const router = express.Router()
 const jwt = require("jsonwebtoken")
 const bcrypt = require('bcryptjs')
+const Post = require('../models/post.model')
 const { checkUser, verifyAuth } = require('../middlewares/auth.middleware')
 
 router.route('/')
@@ -53,6 +54,7 @@ router.route('/updateName')
             const userId = req.userId
             const {newName} = req.body
             const user = await User.findOneAndUpdate({_id:userId},{name:newName})
+            const posts = await Post.updateMany({name:user.name},{name:newName})
             res.json({success:true,message:"Name successfully updated"})
         }catch(error){
             res.json(500).json({success:false,error:error.message})
