@@ -116,19 +116,36 @@ router.route('/updateFollow')
             const {followUserId} = req.body
             const user = await User.findById(userId)
             const otherUser = await User.findById(followUserId)
-            const addToFollowing = user.following.push({
-                name:otherUser.name,
-                username:otherUser.username,
-                profilePicture:otherUser.profilePicture
-            })
-            const addToFollowers = otherUser.followers.push({
-                name:user.name,
-                username:user.username,
-                profilePicture:user.profilePicture
-            })
-            const updateUser = await user.save()
-            const updateOtherUser = await otherUser.save()
-            res.json({success:true,message:"Updated successfully"})
+            const isFollowing = user.following.find(user => user.username === otherUser.username)
+            if(!isFollowing){
+                const addToFollowing = user.following.push({
+                    name:otherUser.name,
+                    username:otherUser.username,
+                    profilePicture:otherUser.profilePicture
+                })
+                const addToFollowers = otherUser.followers.push({
+                    name:user.name,
+                    username:user.username,
+                    profilePicture:user.profilePicture
+                })
+                const updateUser = await user.save()
+                const updateOtherUser = await otherUser.save()
+                res.json({success:true,message:"Added to the follow successfully"})
+            }else{
+                const removeFromFollowing = user.following.pop({
+                    name:otherUser.name,
+                    username:otherUser.username,
+                    profilePicture:otherUser.profilePicture
+                })
+                const removeFromFollowers = otherUser.followers.pop({
+                    name:user.name,
+                    username:user.username,
+                    profilePicture:user.profilePicture
+                })
+                const updateUser = await user.save()
+                const updateOtherUser = await otherUser.save()
+                res.json({success:true,message:"Removed from the follow successfully"})
+            }
         }catch(err){
             res.status(500).json({success:false,error:err.message})
         }
