@@ -7,7 +7,13 @@ const postSchema = new Schema({
     name:String,
     username:String,
     profilePicture:String,
-    likes:[{type:mongoose.Types.ObjectId,ref:User}]
+    likes:[{type:mongoose.Types.ObjectId,ref:User}],
+    comments:[{
+        comment:String,
+        name:String,
+        username:String,
+        profilePicture:String
+    }]
 },
 {
     timestamps:true

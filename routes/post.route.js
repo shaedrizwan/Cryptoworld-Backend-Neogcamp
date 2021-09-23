@@ -56,5 +56,36 @@ router.route('/likePost')
         }
     })
 
+router.route('/comments')
+    .post(async(req,res)=>{
+        try{
+            const {postId} = req.body
+            const post = await Post.findById(postId)
+            res.json({success:true,comments:post.comments})
+        }catch(err){
+            res.status(500).json({success:false,error:err.message})
+        }
+    })
+
+router.route('/addComment')
+    .post(async(req,res)=>{
+        try{
+            const userId = req.userId
+            const{postId,comment} = req.body
+            const user = await User.findById(userId)
+            const post = await Post.findById(postId)
+            const addComment = post.comments.push({
+                comment:comment,
+                name:user.name,
+                username:user.username,
+                profilePicture:user.profilePicture
+            })
+            const updateUser = await post.save()
+            res.json({success:true,message:"Comment added successfully"})
+        }catch(err){
+            res.status(500).json({success:false,error:err.message})
+        }
+    })
+
 
 module.exports = router
