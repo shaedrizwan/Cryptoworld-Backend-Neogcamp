@@ -6,15 +6,17 @@ const bcrypt = require('bcryptjs')
 const Post = require('../models/post.model')
 const { checkUser, verifyAuth } = require('../middlewares/auth.middleware')
 
-router.route('/')
-    .get((req,res)=>{
-        res.json({success:true,message:"User route"})
-    })
 
 router.route('/signup')
     .post(async(req,res)=>{
         try{
             const newUser = req.body
+            if(newUser.profilePicture === ""){
+                newUser.profilePicture = "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"
+            }
+            if(newUser.coverPicture === ""){
+                newUser.coverPicture = "https://cdn.pixabay.com/photo/2018/07/17/14/43/banner-3544296_960_720.jpg"
+            }
             const salt = await bcrypt.genSalt(10)
             const hashedPassword = await bcrypt.hash(newUser.password,salt)
             newUser.password = hashedPassword
